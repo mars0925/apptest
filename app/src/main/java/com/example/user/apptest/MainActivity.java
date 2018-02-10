@@ -1,7 +1,9 @@
 package com.example.user.apptest;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     Myadapter adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
                 Uri uri = FileProvider.getUriForFile(MainActivity.this, "com.example.user.apptest.provider", f);
                 it.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                 startActivityForResult(it, imagerequest);
+                //照片路徑存到資料庫
+                PicData picData = new PicData(imagename,String.valueOf(uri));
+                PicDAO dao = new PicDAO(MainActivity.this);
+                dao.addpic(picData);
             }
         });
     }
@@ -156,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         if(s.length()==1) s="0"+s;
         return s;
     }
+
     class Myadapter extends BaseAdapter
     {
 
